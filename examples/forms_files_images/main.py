@@ -8,7 +8,8 @@ from flask_admin import Admin
 from flask_admin import form
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import rules
-from flask_admin.theme import Bootstrap4Theme
+from flask_admin.theme import Bootstrap5Theme
+from flask_babel import Babel
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import Markup
 from sqlalchemy import Boolean
@@ -37,6 +38,15 @@ admin = Admin(app, name="Example: Forms", theme=Bootstrap4Theme(swatch="cerulean
 @app.route("/")
 def index():
     return '<a href="/admin/">Click me to get to Admin!</a>'
+
+
+
+def get_locale():
+    return "en"
+
+
+# Initialize babel
+babel = Babel(app, locale_selector=get_locale)
 
 
 # Create directory for file fields to use
@@ -158,6 +168,9 @@ class ImageView(ModelView):
 
     column_formatters = {"path": _list_thumbnail}
 
+    # Add custom column label
+    column_labels = {"path": "Thumbnail"}
+
     # Alternative way to contribute field is to override it completely.
     # In this case, Flask-Admin won't attempt to merge various parameters for the field.
     form_extra_fields = {
@@ -196,6 +209,25 @@ class UserView(ModelView):
     column_descriptions = {
         "is_admin": "Is this an admin user?",
     }
+
+
+# Flask views
+@app.route("/")
+def index():
+    return '<a href="/admin/">Click me to get to Admin!</a>'
+
+
+# Create admin
+admin = Admin(
+    app, "Example: Forms", theme=Bootstrap5Theme(swatch="cerulean", fluid=True)
+)
+
+# Add views
+admin.add_view(FileView(File, db.session))
+admin.add_view(ImageView(Image, db.session))
+admin.add_view(UserView(User, db.session))
+admin.add_view(PageView(Page, db.session))
+admin.add_view(rediscli.RedisCli(Redis()))
 
 
 def build_sample_db():
@@ -254,4 +286,5 @@ if __name__ == "__main__":
         with app.app_context():
             build_sample_db()
 
-    app.run(debug=True)
+    # Start app
+    app.run(debug=True, host="0.0.0.0")
