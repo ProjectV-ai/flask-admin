@@ -17,7 +17,7 @@
 {% block body %}
   {% block model_menu_bar %}
     <div class="model-toolbar mb-4">
-        <ul class="nav nav-pills bg-body-tertiary flex-wrap align-items-center gap-1 mb-2 p-2">
+        <ul class="nav nav-pills bg-body-primary flex-wrap align-items-center gap-1 mb-2 p-2">
 
             <!-- List View Link (Active) -->
             <li class="nav-item">
@@ -93,9 +93,9 @@
     <!-- Table Container with Enhanced Styling -->
     <div class="table-container">
         <div class="table-responsive">
-            <table class="table table-hover table-bordered table-sm mb-0">
-                <thead class="table-primary">
-                    <tr>
+            <table class="table table-hover table-striped table-bordered table-sm mb-0">
+                <thead >
+                    <tr class="table-active">
                       {% block list_header scoped %}
                         {% if actions %}
                         <th scope="col" class="text-center list-checkbox-column">
@@ -209,7 +209,7 @@
     <!-- Enhanced Pagination -->
     {% block list_pager %}
         <div class="d-flex {% if num_pages is not none %}justify-content-between{% else %}justify-content-end{% endif %}
-            align-items-center mt-3 p-2 bg-body-tertiary">
+            align-items-center mt-3 p-2 bg-body">
           {% if num_pages is not none %}
             <div class="pagination-info text-muted small">
                 {{ _gettext('Showing') }}

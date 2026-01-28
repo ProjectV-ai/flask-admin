@@ -1,157 +1,37 @@
-import datetime
-import os
 import random
 
-from flask import Flask
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask_admin.form.fields import Select2Field
-from flask_admin.theme import Bootstrap5Theme
-from flask_babel import Babel
-from flask_sqlalchemy import SQLAlchemy
-from wtforms.fields import DateTimeLocalField
-
-# Create application
-app = Flask(__name__)
-
-# Create dummy secrey key so we can use sessions
-app.config["SECRET_KEY"] = "123456790"
-
-# Create in-memory database
-app.config["DATABASE_FILE"] = "sample_db.sqlite"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + app.config["DATABASE_FILE"]
-app.config["SQLALCHEMY_ECHO"] = True
-
-db = SQLAlchemy(app)
-
-
-def get_locale():
-    return "en"
-
-
-# Initialize babel
-babel = Babel(app, locale_selector=get_locale)
-
-
-# Models
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Unicode(64))
-    email = db.Column(db.Unicode(64))
-    active = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
-
-    organization_id = db.Column(
-        db.Integer, db.ForeignKey("organization.id"), nullable=False
-    )
-    organization = db.relationship("Organization", back_populates="users")
-
-    def __unicode__(self):
-        return self.name
-
-    def __repr__(self):
-        return self.name
+all_themes = [
+    "default",
+    "cerulean",
+    "cosmo",
+    "cyborg",
+    "darkly",
+    "flatly",
+    "journal",
+    "litera",
+    "lumen",
+    "lux",
+    "materia",
+    "minty",
+    "pulse",
+    "sandstone",
+    "simplex",
+    "sketchy",
+    "slate",
+    "solar",
+    "spacelab",
+    "superhero",
+    "united",
+    "yeti",
+    "brite",
+    "morph",
+    "quartz",
+    "vapor",
+    "zephyr",
+]
 
 
-class Organization(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Unicode(64))
-    shortname = db.Column(db.Unicode(16))
-
-    users = db.relationship("User", back_populates="organization")
-
-    def __unicode__(self):
-        return f"{self.name} {self.shortname}"
-
-    def __repr__(self):
-        return self.shortname
-
-
-class Page(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.Unicode(64))
-    content = db.Column(db.UnicodeText)
-
-    def __unicode__(self):
-        return self.name
-
-
-# Customized admin interface
-class CustomView(ModelView):
-    pass
-
-
-class UserAdmin(CustomView):
-    column_searchable_list = ("name",)
-    column_filters = ("name", "email", "organization", "active")
-    can_export = True
-    export_types = ["csv", "xlsx"]
-
-    form_columns = ["name", "email", "active", "organization_id"]
-
-    form_overrides = {"organization_id": Select2Field, "created_at": DateTimeLocalField}
-
-    form_args = {
-        "organization_id": {
-            "choices": [],
-            "coerce": int,
-            "label": "Organization",
-            "description": "select an organization for this user",
-        }
-    }
-
-    can_view_details = True
-    details_modal = True
-    create_modal = True
-    edit_modal = True
-
-    def _organization_id_choices(self):
-        return [(o.id, f"{o.name} ({o.shortname})") for o in Organization.query.all()]
-
-    def make_form(self, create_or_edit_form, obj=None):
-        form = create_or_edit_form(obj)
-        form.organization_id.choices = self._organization_id_choices()
-        return form
-
-    def create_form(self, obj=None):
-        return self.make_form(super().create_form, obj)
-
-    def edit_form(self, obj=None):
-        return self.make_form(super().edit_form, obj)
-
-
-class OrganizationAdmin(CustomView):
-    column_searchable_list = ("name", "shortname")
-    column_filters = ("name", "shortname")
-    create_modal = True
-
-    inline_models = [
-        User,
-    ]
-
-    can_view_details = True
-
-
-# Flask views
-@app.route("/")
-def index():
-    return '<a href="/admin/">Click me to get to Admin!</a>'
-
-
-# Create admin with custom base template
-admin = Admin(
-    app, "Example: Bootstrap5", theme=Bootstrap5Theme(swatch="default", fluid=True)
-)
-
-# Add views
-admin.add_view(UserAdmin(User, db.session, category="Menu"))
-admin.add_view(OrganizationAdmin(Organization, db.session, category="Menu"))
-
-admin.add_sub_category(name="Submenu", parent_name="Menu")
-admin.add_view(CustomView(Page, db.session, category="Submenu"))
-
-
-def build_sample_db():
+def build_sample_db(db, User, Page, Organization):
     """
     Populate a small db with some example entries.
     This version creates multiple organizations and randomly assigns them to users.
@@ -310,17 +190,4 @@ def build_sample_db():
 
     # Commit all the changes to the database
     db.session.commit()
-
     return
-
-
-if __name__ == "__main__":
-    # Build a sample db on the fly, if one does not exist yet.
-    app_dir = os.path.realpath(os.path.dirname(__file__))
-    database_path = os.path.join(app_dir, app.config["DATABASE_FILE"])
-    if not os.path.exists(database_path):
-        with app.app_context():
-            build_sample_db()
-
-    # Start app
-    app.run(debug=True, host="0.0.0.0")
