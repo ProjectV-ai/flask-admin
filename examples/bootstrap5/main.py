@@ -11,6 +11,7 @@ from flask_admin.base import expose
 from flask_admin.contrib.fileadmin import FileAdmin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form.fields import Select2Field
+from flask_admin.menu import MenuDivider
 from flask_admin.menu import MenuLink
 from flask_admin.theme import Bootstrap5Theme
 from flask_babel import Babel
@@ -114,6 +115,9 @@ class UserAdmin(CustomView):
     details_modal = True
     create_modal = True
     edit_modal = True
+    can_set_page_size = True
+    page_size = 3
+    page_size_options = [3, 10, 20, 50, 100]
 
     def _organization_id_choices(self):
         return [(o.id, f"{o.name} ({o.shortname})") for o in Organization.query.all()]
@@ -178,16 +182,29 @@ def index():
 # Create admin with custom base template
 admin = Admin(
     app,
-    "Example: Bootstrap5",
+    "Bootstrap5",
     theme=Bootstrap5Theme(swatch="default", fluid=True),
-    index_view=MyAdminIndexView(),
+    index_view=MyAdminIndexView(
+        menu_icon_type="fas",
+        menu_icon_value="fa-home",
+        menu_class_name="text-warning",
+    ),
     category_icon_classes={
         "Menu": "fa fa-cog text-danger",
     },
 )
 
 # Add views
-admin.add_view(UserAdmin(User, db.session, category="Menu"))
+admin.add_view(
+    UserAdmin(
+        User,
+        db.session,
+        category="Menu",
+        menu_icon_type="fas",
+        menu_icon_value="fa-users",
+        menu_class_name="text-warning",
+    )
+)
 admin.add_view(OrganizationAdmin(Organization, db.session, category="Menu"))
 
 admin.add_sub_category(name="Submenu", parent_name="Menu")
@@ -195,6 +212,54 @@ admin.add_view(CustomView(Page, db.session, category="Submenu"))
 admin.add_view(FileAdmin("files/", name="Local Files", category="Menu"))
 admin.add_view(
     FileAdminModal("files/", name="Local Files with Modals", category="Menu")
+)
+
+admin.add_link(
+    MenuLink(
+        name="link1",
+        url="http://www.example.com/",
+        class_name="text-warning bg-danger",
+        icon_type="fas",
+        icon_value="fa-external-link-alt",
+    )
+)
+
+admin.add_link(
+    MenuLink(
+        name="link1",
+        url="/",
+        category="Links",
+        icon_type="fa",
+        icon_value="fa-users",
+    )
+)
+admin.add_link(
+    MenuLink(
+        name="link2",
+        url="/",
+        category="Links",
+        icon_type="fas",
+        icon_value="fa-users",
+    )
+)
+admin.add_menu_item(MenuDivider(), target_category="Links")
+admin.add_link(
+    MenuLink(
+        name="link3",
+        url="/",
+        category="Links",
+        icon_type="image",
+        icon_value="man.png",
+    )
+)
+admin.add_link(
+    MenuLink(
+        name="link4",
+        url="/",
+        category="Links",
+        icon_type="image-url",
+        icon_value="https://cdn-icons-png.freepik.com/256/1296/1296698.png?semt=ais_white_label",
+    )
 )
 
 

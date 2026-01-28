@@ -156,22 +156,30 @@
         {% if admin_view.can_upload %}
         <div class="btn-group">
             {%- if admin_view.upload_modal -%}
-              {{ lib.add_modal_button(url=get_dir_url('.upload', path=dir_path, modal=True),
-                                      btn_class="btn btn-secondary",
-                                      content=_gettext('Upload File')) }}
+              {{ lib.add_modal_button(
+                  url=get_dir_url('.upload', path=dir_path, modal=True),
+                  btn_class="btn btn-secondary",
+                  content= '<i class="fa-solid fa-file-arrow-up"></i>' + _gettext('Upload File')) }}
             {% else %}
-              <a class="btn btn-secondary" href="{{ get_dir_url('.upload', path=dir_path) }}">{{ _gettext('Upload File') }}</a>
+              <a class="btn btn-secondary" href="{{ get_dir_url('.upload', path=dir_path) }}">
+                <i class="fa-solid fa-file-arrow-up"></i>
+                {{ _gettext('Upload File') }}
+              </a>
             {%- endif -%}
         </div>
         {% endif %}
         {% if admin_view.can_mkdir %}
         <div class="mx-1 btn-group">
             {%- if admin_view.mkdir_modal -%}
-              {{ lib.add_modal_button(url=get_dir_url('.mkdir', path=dir_path, modal=True),
-                                      btn_class="btn btn-secondary",
-                                      content=_gettext('Create Directory')) }}
+              {{ lib.add_modal_button(
+                    url=get_dir_url('.mkdir', path=dir_path, modal=True),
+                    btn_class="btn btn-secondary",
+                    content='<i class="fa fa-folder-plus"></i>' + _gettext('Create Directory')) }}
             {% else %}
-              <a class="btn btn-secondary" href="{{ get_dir_url('.mkdir', path=dir_path) }}">{{ _gettext('Create Directory') }}</a>
+              <a class="btn btn-secondary" href="{{ get_dir_url('.mkdir', path=dir_path) }}">
+                <i class="fa fa-folder-plus"></i>
+                {{ _gettext('Create Directory') }}
+              </a>
             {%- endif -%}
         </div>
         {% endif %}

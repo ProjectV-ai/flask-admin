@@ -1,15 +1,17 @@
 {% macro menu_icon(item) %}
   {% set icon_type = item.get_icon_type() %}
+  {% set _class = item.get_class_name() %}
+  {% set class_name = (' ' + _class) if _class else '' %}
   {% if icon_type %}
     {% set icon_value = item.get_icon_value() %}
     {% if icon_type == 'glyph' %}
-      <i class="fa {{ icon_value|replace('glyphicon-', 'fa-') }}"></i>
-    {% elif icon_type == 'fa' %}
-      <i class="fa {{ icon_value }}"></i>
+      <i class="fa {{ icon_value|replace('glyphicon-', 'fa-') }} {{ class_name }}"></i>
+    {% elif icon_type in ['fa', 'fas', 'far', 'fal', 'fad'] %}
+      <i class="{{ icon_type }} {{ icon_value }} {{ class_name }}"></i>
     {% elif icon_type == 'image' %}
-      <img src="{{ url_for('static', filename=icon_value) }}" alt="menu image">
+      <img src="{{ url_for('static', filename=icon_value) }}" class="{{ class_name }}" width="20" alt="menu image">
     {% elif icon_type == 'image-url' %}
-      <img src="{{ icon_value }}" alt="menu image">
+      <img src="{{ icon_value }}" class="{{ class_name }}" width="20" alt="menu image">
     {% endif %}
   {% endif %}
 {% endmacro %}
@@ -31,16 +33,17 @@
               <a class="dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   {{ menu_icon(item) }}{{ item.name }}
               </a>
-              <ul class="dropdown-menu dropdown-menu-dark dropend">
+              <ul class="dropdown-menu dropdown-menu dropend">
                   {{ menu(menu_root=children, is_submenu=True) }}
               </ul>
           </li>
         {% else %}
-          <li class="nav-item dropdown{{ other_classes }}">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle {{ active_class }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="{{ class_name }}"></i>
                   {{ menu_icon(item) }}{{ item.name }}
               </a>
-              <ul class="dropdown-menu dropdown-menu-dark dropend">
+              <ul class="dropdown-menu dropdown-menu dropend">
                   {{ menu(menu_root=children, is_submenu=True) }}
               </ul>
           </li>
@@ -48,7 +51,7 @@
       {% endif %}
     {% elif item.is_accessible() and item.is_visible() %}
       {% if is_submenu %}
-          <li{% if class_name %} class="{{ class_name }}"{% endif %}>
+          <li class="{{ class_name }}">
               <a class="dropdown-item{{ active_class }}" href="{{ item.get_url() }}"{% if item.target %} target="{{ item.target }}"{% endif %}>
                   {{ menu_icon(item) }}{{ item.name }}
               </a>
@@ -67,9 +70,10 @@
 {% macro menu_links(links=None) %}
   {% if links is none %}{% set links = admin_view.admin.menu_links() %}{% endif %}
   {% for item in links %}
-    {% set class_name = item.get_class_name() %}
+    {% set c = item.get_class_name() %}
+    {% set class_name = (' ' + c) if c else '' %}
     {% if item.is_accessible() and item.is_visible() %}
-      <li class="nav-item{% if class_name %} {{ class_name }}{% endif %}">
+      <li class="nav-item{{ class_name }}">
           <a class="nav-link" href="{{ item.get_url() }}"{% if item.target %} target="{{ item.target }}"{% endif %}>
               {{ menu_icon(item) }}{{ item.name }}
           </a>
