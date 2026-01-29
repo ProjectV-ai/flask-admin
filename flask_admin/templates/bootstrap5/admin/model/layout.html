@@ -8,7 +8,7 @@
               {% for k in filter_groups %}
                 <li>
                     <a href="#" class="dropdown-item filter" onclick="return false;">
-                        <i class="fas fa-tag me-2"></i>{{ k }}
+                        <i class="fas fa-tag me-2"></i>{{ k | safe }}
                     </a>
                 </li>
               {% endfor %}
