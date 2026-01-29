@@ -49,7 +49,7 @@ class BootstrapTheme(Theme):
         )
         admin = Admin(app, name='microblog', theme=t)
     """
-      
+
     folder: typing.Literal["bootstrap4", "bootstrap5"]
     base_template: str = "admin/base.html"
     swatch: str = "default"

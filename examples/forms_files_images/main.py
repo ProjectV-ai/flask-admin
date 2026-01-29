@@ -6,12 +6,14 @@ from flask import Flask
 from flask import url_for
 from flask_admin import Admin
 from flask_admin import form
+from flask_admin.contrib import rediscli
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import rules
 from flask_admin.theme import Bootstrap5Theme
 from flask_babel import Babel
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import Markup
+from redis import Redis
 from sqlalchemy import Boolean
 from sqlalchemy import Integer
 from sqlalchemy import String
@@ -34,21 +36,12 @@ app.config["SQLALCHEMY_ECHO"] = False
 db = SQLAlchemy(app)
 
 
-
 def get_locale():
     return "en"
 
 
 # Initialize babel
 babel = Babel(app, locale_selector=get_locale)
-admin = Admin(
-    app, name="Example: Forms", theme=Bootstrap5Theme(swatch="cerulean", fluid=True)
-)
-
-
-@app.route("/")
-def index():
-    return '<a href="/admin/">Click me to get to Admin!</a>'
 
 
 # Create directory for file fields to use
@@ -144,6 +137,8 @@ class PageView(ModelView):
     create_template = "create_page.html"
     edit_template = "edit_page.html"
 
+    column_formatters = {"text": lambda v, c, m, p: Markup(m.text)}
+
 
 class FileView(ModelView):
     # Override form field to use Flask-Admin FileUploadField
@@ -224,13 +219,6 @@ admin = Admin(
     app, "Example: Forms", theme=Bootstrap5Theme(swatch="cerulean", fluid=True)
 )
 
-# Add views
-admin.add_view(FileView(File, db.session))
-admin.add_view(ImageView(Image, db.session))
-admin.add_view(UserView(User, db.session))
-admin.add_view(PageView(Page, db.session))
-admin.add_view(rediscli.RedisCli(Redis()))
-
 
 def build_sample_db():
     """
@@ -281,6 +269,7 @@ if __name__ == "__main__":
     admin.add_view(ImageView(Image, db))
     admin.add_view(UserView(User, db))
     admin.add_view(PageView(Page, db))
+    admin.add_view(rediscli.RedisCli(Redis()))
 
     app_dir = op.realpath(os.path.dirname(__file__))
     database_path = op.join(app_dir, app.config["DATABASE_FILE"])

@@ -104,7 +104,7 @@ class UserAdmin(CustomView):
 
     form_args = {
         "organization_id": {
-            "choices": [],
+            "choices": [(1, "x")],
             "coerce": int,
             "label": "Organization",
             "description": "select an organization for this user",
@@ -117,7 +117,7 @@ class UserAdmin(CustomView):
     edit_modal = True
     can_set_page_size = True
     page_size = 3
-    page_size_options = [3, 10, 20, 50, 100]
+    page_size_options = (3, 10, 20, 50, 100)
 
     def _organization_id_choices(self):
         return [(o.id, f"{o.name} ({o.shortname})") for o in Organization.query.all()]
@@ -175,7 +175,7 @@ class FileAdminModal(FileAdmin):
 
 # Flask views
 @app.route("/")
-def index():
+def index_page():
     return '<a href="/admin/">Click me to get to Admin!</a>'
 
 
@@ -235,11 +235,7 @@ admin.add_link(
 )
 admin.add_link(
     MenuLink(
-        name="link2",
-        url="/",
-        category="Links",
-        icon_type="fas",
-        icon_value="fa-users",
+        name="link2", url="/", category="Links", icon_type="fas", icon_value="fa-users"
     )
 )
 admin.add_menu_item(MenuDivider(), target_category="Links")
