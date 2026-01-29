@@ -1,3 +1,4 @@
+import datetime
 import random
 
 all_themes = [
@@ -24,6 +25,7 @@ all_themes = [
     "united",
     "yeti",
     "brite",
+    "raya",
     "morph",
     "quartz",
     "vapor",
@@ -31,7 +33,7 @@ all_themes = [
 ]
 
 
-def build_sample_db(db, User, Page, Organization):
+def build_sample_db(db, User, Page, Organization, Social):
     """
     Populate a small db with some example entries.
     This version creates multiple organizations and randomly assigns them to users.
@@ -122,6 +124,10 @@ def build_sample_db(db, User, Page, Organization):
         user = User()
         user.name = f"{first_names[i]} {last_names[i]}"
         user.email = f"{first_names[i].lower()}@example.com"
+        user.dob = datetime.date(
+            random.randint(1980, 2010), random.randint(1, 12), random.randint(1, 28)
+        )
+        user.social = random.choice(list(Social))
 
         # Pick a random organization from the list created above
         user.organization = random.choice(organizations)

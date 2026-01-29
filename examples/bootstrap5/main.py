@@ -1,4 +1,5 @@
 import datetime
+import enum
 import os
 
 from flask import Flask
@@ -43,13 +44,33 @@ def get_locale():
 babel = Babel(app, locale_selector=get_locale)
 
 
+class Social(enum.Enum):
+    UNKNOWN = "❌ UNKNOWN"
+    Single = "🔗 Single"
+    Married = "💍 Married"
+    Complicated = "❓ Complicated"
+
+    @classmethod
+    def _missing_(cls, value):
+        """Hook called when a value is not found in the enumeration."""
+        return cls.UNKNOWN
+
+    def __str__(self):
+        return self.value
+
+    def __repr__(self):
+        return f"<Social.{self.name}: {self.value}>"
+
+
 # Models
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode(64))
     email = db.Column(db.Unicode(64))
     active = db.Column(db.Boolean, default=True)
+    dob = db.Column(db.Date)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    social = db.Column(db.Enum(Social), default=Social.Single)
 
     organization_id = db.Column(
         db.Integer, db.ForeignKey("organization.id"), nullable=False
@@ -93,12 +114,36 @@ class CustomView(ModelView):
 
 class UserAdmin(CustomView):
     column_searchable_list = ("name",)
-    column_filters = ("name", "email", "organization", "active", "created_at")
+    column_filters = (
+        "name",
+        "email",
+        "organization",
+        "dob",
+        "social",
+        "active",
+        "created_at",
+    )
     can_export = True
     export_types = ["csv", "xlsx"]
 
-    column_editable_list = ["name", "email", "active", "organization", "created_at"]
-    form_columns = ["name", "email", "active", "organization_id", "created_at"]
+    column_editable_list = [
+        "name",
+        "email",
+        "active",
+        "dob",
+        "social",
+        "organization",
+        "created_at",
+    ]
+    form_columns = [
+        "name",
+        "email",
+        "active",
+        "dob",
+        "social",
+        "organization_id",
+        "created_at",
+    ]
 
     form_overrides = {"organization_id": Select2Field, "created_at": DateTimeLocalField}
 
@@ -275,7 +320,7 @@ if __name__ == "__main__":
     database_path = os.path.join(app_dir, app.config["DATABASE_FILE"])
     if not os.path.exists(database_path):
         with app.app_context():
-            build_sample_db(db, User, Page, Organization)
+            build_sample_db(db, User, Page, Organization, Social)
 
     # Start app
     app.run(debug=True)

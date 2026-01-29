@@ -161,12 +161,12 @@ class AdminFilters {
             }
             
             if (window.faForm && window.faForm.applyStyle) {
-                window.faForm.applyStyle(field, filter.type);
+                window.faForm.applyStyle($(field), filter.type);
             }
         } else if (filter.options) {
             filter.type = "select2";
             if (window.faForm && window.faForm.applyStyle) {
-                window.faForm.applyStyle(field, filter.type);
+                window.faForm.applyStyle($(field), filter.type);
             }
         }
         
@@ -178,21 +178,26 @@ class AdminFilters {
         
         const startField = document.createElement('input');
         startField.type = inputType;
-        startField.name = originalField.name + '_start';
+        startField.id = originalField.name + '_start';
         startField.className = 'form-control form-control-sm filter-val';
         startField.placeholder = 'From...';
+        startField.value = originalField.value.split(' to ')[0] || '';
+
         
         const endField = document.createElement('input');
         endField.type = inputType;
-        endField.name = originalField.name + '_end';
+        endField.id = originalField.name + '_end';
         endField.className = 'form-control form-control-sm filter-val';
         endField.placeholder = 'To...';
+        endField.value = originalField.value.split(' to ')[1] || '';
         
         const separator = document.createElement('span');
         separator.className = 'input-group-text';
         separator.innerHTML = '<i class="fas fa-arrow-right"></i>';
         
-        inputGroup.replaceChild(startField, originalField);
+        //inputGroup.replaceChild(startField, originalField);
+        originalField.classList.add('d-none');
+        inputGroup.insertBefore(startField, inputGroup.lastElementChild);
         inputGroup.insertBefore(separator, inputGroup.lastElementChild);
         inputGroup.insertBefore(endField, inputGroup.lastElementChild);
         
@@ -200,6 +205,7 @@ class AdminFilters {
             field.addEventListener('change', () => {
                 const submitButton = this.root.querySelector('button[type="submit"]');
                 submitButton?.classList.remove('d-none');
+                originalField.value = startField.value + ' to ' + endField.value;
             });
         });
         
