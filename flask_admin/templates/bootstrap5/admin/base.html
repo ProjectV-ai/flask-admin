@@ -98,33 +98,33 @@
 {% endblock %}
 
 {%- block tail_js %}
-        <script {{ admin_csp_nonce_attribute }}
-            src="{{ admin_static.url(filename='bootstrap/bootstrap5/js/bootstrap.bundle.min.js', v='5.3.8') }}"></script>
+    <script {{ admin_csp_nonce_attribute }} src="{{ admin_static.url(filename='bootstrap/bootstrap5/js/bootstrap.bundle.min.js', v='5.3.8') }}"></script>
+    <script {{ admin_csp_nonce_attribute }} src="{{ admin_static.url(filename='bootstrap/bootstrap5/js/popper.min.js', v='2.11.8') }}"></script>
 
-        <script {{ admin_csp_nonce_attribute }}
-            src="{{ admin_static.url(filename='admin/js/helpers.js', v='1.0.0') }}"></script>
+    <script {{ admin_csp_nonce_attribute }} src="{{ admin_static.url(filename='vendor/moment.min.js', v='2.9.4') }}" type="text/javascript"></script>
+    <script {{ admin_csp_nonce_attribute }} src="{{ admin_static.url(filename='admin/js/helpers.js', v='1.0.0') }}"></script>
 
-      {% if admin_view.extra_js %}
-        {% for js_url in admin_view.extra_js %}
-        <script {{ admin_csp_nonce_attribute }} src="{{ js_url }}"></script>
-        {% endfor %}
-      {% endif %}
+  {% if admin_view.extra_js %}
+    {% for js_url in admin_view.extra_js %}
+    <script {{ admin_csp_nonce_attribute }} src="{{ js_url }}"></script>
+    {% endfor %}
+  {% endif %}
 
-        <script {{ admin_csp_nonce_attribute }}>
-            // toasts
-            document.addEventListener('DOMContentLoaded', (event) => {
-              const toastElList = document.querySelectorAll('.toast');
-              const toastList = [...toastElList].map(toastEl => {
-                const toast = new bootstrap.Toast(toastEl);
-                toast.show();
-                return toast;
-              });
-            });
+  <script {{ admin_csp_nonce_attribute }}>
+      // toasts
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const toastElList = document.querySelectorAll('.toast');
+        const toastList = [...toastElList].map(toastEl => {
+          const toast = new bootstrap.Toast(toastEl);
+          toast.show();
+          return toast;
+        });
+      });
 
-            // popovers
-            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-            const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
-        </script>
+      // popovers
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+  </script>
 {% endblock -%}
 
 {% block tail %}{% endblock %}
