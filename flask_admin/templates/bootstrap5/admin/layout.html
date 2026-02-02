@@ -6,7 +6,7 @@
     {% set icon_value = item.get_icon_value() %}
     {% if icon_type == 'glyph' %}
       <i class="fa {{ icon_value|replace('glyphicon-', 'fa-') }} {{ class_name }}"></i>
-    {% elif icon_type in ['fa', 'fas', 'far', 'fal', 'fad'] %}
+    {% elif icon_type in ['fa', 'fas', 'far', 'fal', 'fad', 'fa-solid', 'fa-regular', 'fa-light', 'fa-thin'] %}
       <i class="{{ icon_type }} {{ icon_value }} {{ class_name }}"></i>
     {% elif icon_type == 'image' %}
       <img src="{{ url_for('static', filename=icon_value) }}" class="{{ class_name }}" width="20" alt="menu image">

@@ -120,7 +120,7 @@
                         {% for c, name in list_columns %}
                             {% set column = loop.index0 %}
                             <th scope="col" class="column-header col-{{c}} position-relative">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-top">
                                   {%- if admin_view.is_sortable(c) -%}
                                     <a class="text-decoration-none" href="{{ sort_url(column, sort_column == column) }}"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
