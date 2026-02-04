@@ -1,17 +1,15 @@
 {%- extends 'admin/master.html' -%}
 {%- from 'admin/static.html' import url as src_url with context -%}
-{%- from 'admin/lib.html' import form_css, form_js, add_modal_window, pager,
-                                 simple_pager, subnav_link, subnav_modal_link with context -%}
-{%- from 'admin/model/layout.html' import export_options, filter_form, filter_options,
-                                          page_size_form, search_form with context -%}
-{%- from 'admin/actions.html' import dropdown as actions_dropdown,
-                                     form as actions_form,
-                                     script as actions_script with context -%}
+{%- import 'admin/lib.html' as lib with context -%}
+{%- import 'admin/model/layout.html' as model_layout with context -%}
+{%- import 'admin/actions.html' as actionlib with context -%}
+{#
+#}
 {%- import 'admin/model/row_actions.html' as row_actions with context -%}
 
 {% block head %}
     {{ super() }}
-    {{ form_css() }}
+    {{ lib.form_css() }}
 {% endblock %}
 
 {% block body %}
@@ -25,7 +23,7 @@
               {% if count %}
                 {% set _content = _content + '<span class="badge bg-light text-dark ms-2">' + count|string + '</span>' %}
               {% endif %}
-                {{ subnav_link(content=_content, title=_gettext('List'), link_extra_cls='active disabled') }}
+                {{ lib.subnav_link(content=_content, title=_gettext('List'), link_extra_cls='active disabled') }}
             </li>
 
             <!-- Create View Link -->
@@ -34,19 +32,17 @@
             <li class="nav-item">
               {%- if admin_view.create_modal %}
                 {{
-                    subnav_modal_link(
-                                        content=content,
-                                        url=get_url('.create_view', url=return_url, modal=True),
-                                        title=_gettext('Create New Record')
-                    )
+                    lib.subnav_modal_link(
+                      content=content,
+                      url=get_url('.create_view', url=return_url, modal=True),
+                      title=_gettext('Create New Record'))
                 }}
               {% else %}
                 {{
-                    subnav_link(
-                                    content=content,
-                                    url=get_url('.create_view', url=return_url, modal=Flase),
-                                    title=_gettext('Create New Record')
-                    )
+                    lib.subnav_link(
+                      content=content,
+                      url=get_url('.create_view', url=return_url, modal=Flase),
+                      title=_gettext('Create New Record'))
                 }}
               {% endif -%}
             </li>
@@ -54,29 +50,29 @@
 
           <!-- Export Dropdown -->
           {% if admin_view.can_export %}
-            {{ export_options() }}
+            {{ model_layout.export_options() }}
           {% endif %}
 
           {% block model_menu_bar_before_filters %}{% endblock %}
 
           <!-- Add Filter Dropdown -->
           {% if filters %}
-              {{ filter_options() }}
+              {{ model_layout.filter_options() }}
           {% endif %}
 
           <!-- Page Size Dropdown -->
           {% if can_set_page_size %}
-            {{ page_size_form(page_size_url, admin_view.page_size_options) }}
+            {{ model_layout.page_size_form(page_size_url, admin_view.page_size_options) }}
           {% endif %}
 
           <!-- Bulk Actions Dropdown -->
           {% if actions %}
-              {{ actions_dropdown(actions) }}
+              {{ actionlib.dropdown(actions) }}
           {% endif %}
 
           <!-- Search Form -->
           {% if search_supported %}
-              {{ search_form() }}
+              {{ model_layout.search_form() }}
           {% endif %}
 
           {% block model_menu_bar_after_filters %}{% endblock %}
@@ -86,7 +82,7 @@
 
     <!-- Modern Filter Interface -->
   {% if filters %}
-    {{ filter_form() }}
+    {{ model_layout.filter_form() }}
   {% endif %}
 
   {% block model_list_table %}
@@ -220,9 +216,9 @@
                 <strong>{{ count or 0 }}</strong>
                 {{ _gettext('entries') }}
             </div>
-            {{ pager(page, num_pages, pager_url) }}
+            {{ lib.pager(page, num_pages, pager_url) }}
           {% else %}
-            {{ simple_pager(page, data|length == page_size, pager_url) }}
+            {{ lib.simple_pager(page, data|length == page_size, pager_url) }}
           {% endif %}
         </div>
     {% endblock %}
@@ -230,20 +226,20 @@
     {% endblock %}
 
     {% block actions %}
-        {{ actions_form(actions, get_url('.action_view')) }}
+        {{ actionlib.form(actions, get_url('.action_view')) }}
     {% endblock %}
 
     {% if admin_view.edit_modal or admin_view.create_modal or admin_view.details_modal %}
-        {{ add_modal_window() }}
+        {{ lib.add_modal_window() }}
     {% endif %}
 {% endblock %}
 
 {% block tail %}
     {{ super() }}
-    {{ form_js() }}
+    {{ lib.form_js() }}
 
     <!-- actions -->
-    {{ actions_script(_gettext('Please select at least one record.'), actions, actions_confirmation) }}
+    {{ actionlib.script(_gettext('Please select at least one record.'), actions, actions_confirmation) }}
 
   {% if filter_groups %}
     <!-- filters -->
