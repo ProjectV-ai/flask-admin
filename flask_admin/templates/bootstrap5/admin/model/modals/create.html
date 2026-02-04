@@ -1,7 +1,5 @@
 {%- import 'admin/static.html' as admin_static with context -%}
-{%- from 'admin/lib.html' import form_tag,
-                                 render_form_buttons,
-                                 render_form_fields with context -%}
+{% import 'admin/lib.html' as lib with context %}
 
 {# store the jinja2 context for form_rules rendering logic #}
 {%- set render_ctx = h.resolve_ctx() -%}
@@ -17,13 +15,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
 
-  {% call form_tag(action=url_for('.create_view', url=return_url)) %}
+  {% call lib.form_tag(action=url_for('.create_view', url=return_url)) %}
     <div class="modal-body">
-        {{ render_form_fields(form, form_opts=form_opts) }}
+        {{ lib.render_form_fields(form, form_opts=form_opts) }}
     </div>
 
     <div class="modal-footer ">
-        {{ render_form_buttons(return_url, extra=None, is_modal=True) }}
+        {{ lib.render_form_buttons(return_url, extra=None, is_modal=True) }}
     </div>
   {% endcall %}
 {% endblock %}

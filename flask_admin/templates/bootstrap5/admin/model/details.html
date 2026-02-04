@@ -1,14 +1,10 @@
 {%- extends 'admin/master.html' -%}
-{%- from 'admin/lib.html' import add_modal_window,
-                                 form_css,
-                                 form_js,
-                                 subnav_link,
-                                 subnav_modal_link with context -%}
+{%- import 'admin/lib.html' as lib with context -%}
 
 {% block head %}
     {{ super() }}
   {%- if admin_view.edit_modal or admin_view.create_modal -%}
-    {{ form_css() }}
+    {{ lib.form_css() }}
   {%- endif -%}
 {% endblock %}
 
@@ -19,7 +15,7 @@
     <!-- List View Link -->
     <li class="nav-item">
       {%- set _content = '<i class="fas fa-list"></i><span class="ms-2 d-none d-md-inline">' + _gettext('List') + '</span>' -%}
-      {{ subnav_link(content=_content, url=get_url('.index_view')) }}
+      {{ lib.subnav_link(content=_content, url=get_url('.index_view')) }}
     </li>
 
     <!-- Create View Link -->
@@ -28,9 +24,9 @@
     {%- set _url = get_url('.create_view', url=return_url, modal=admin_view.create_modal) -%}
     <li class="nav-item">
       {%- if admin_view.create_modal -%}
-        {{ subnav_modal_link(content=_content, url=_url, title=_gettext('Create New Record')) }}
+        {{ lib.subnav_modal_link(content=_content, url=_url, title=_gettext('Create New Record')) }}
       {%- else -%}
-        {{ subnav_link(content=_content, url=_url, title=_gettext('Create New Record')) }}
+        {{ lib.subnav_link(content=_content, url=_url, title=_gettext('Create New Record')) }}
     {%- endif -%}
     </li>
     {%- endif -%}
@@ -42,9 +38,9 @@
     {%- set _url = get_url('.edit_view', id=request.args.get('id'), url=_return_url, modal=admin_view.edit_modal) -%}
     <li class="nav-item">
       {%- if admin_view.edit_modal -%}
-        {{ subnav_modal_link(content=_content, url=_url) }}
+        {{ lib.subnav_modal_link(content=_content, url=_url) }}
       {%- else -%}
-        {{ subnav_link(content=_content, url=_url) }}
+        {{ lib.subnav_link(content=_content, url=_url) }}
       {%- endif -%}
     </li>
     {%- endif -%}
@@ -52,7 +48,7 @@
     <!-- Details View Link (Active) -->
     <li class="nav-item">
       {% set _content = '<i class="fas fa-info-circle"></i><span class="ms-2 d-none d-md-inline">' + _gettext('Details') + '</span>' %}
-      {{ subnav_link(content=_content, link_extra_cls='active disabled') }}
+      {{ lib.subnav_link(content=_content, link_extra_cls='active disabled') }}
     </li>
 
   </ul>
@@ -81,7 +77,7 @@
   {% endblock %}
 
   {%- if admin_view.edit_modal or admin_view.create_modal -%}
-    {{ add_modal_window() }}
+    {{ lib.add_modal_window() }}
   {%- endif -%}
 
 {% endblock %}
@@ -90,7 +86,7 @@
   {{ super() }}
 
   {% if admin_view.edit_modal or admin_view.create_modal %}
-    {{ form_js() }}
+    {{ lib.form_js() }}
     <script {{ admin_csp_nonce_attribute }}
       src="{{ admin_static.url(filename='admin/js/bootstrap5/modal.js', v='1.0.0') }}"></script>
   {% endif %}

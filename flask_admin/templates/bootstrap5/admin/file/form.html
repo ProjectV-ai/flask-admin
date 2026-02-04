@@ -1,5 +1,5 @@
 {%- extends 'admin/master.html' -%}
-{%- from 'admin/lib.html' import render_form with context -%}
+{%- import 'admin/lib.html' as lib with context -%}
 
 {% block body %}
   {% block header %}
@@ -7,6 +7,6 @@
   {% endblock %}
 
   {% block fa_form %}
-    {{ render_form(form, dir_url) }}
+    {{ lib.render_form(form, dir_url) }}
   {% endblock %}
 {% endblock %}

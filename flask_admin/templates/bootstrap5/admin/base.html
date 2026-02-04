@@ -15,12 +15,13 @@
       {% endblock %}
 
       {% block head_css %}
+        {% set rtldir = '.rtl' if get_locale() == 'ar' else '' %}
         {%- if theme.swatch == 'default' -%}
           <link rel="stylesheet" {{ admin_csp_nonce_attribute }}
-              href="{{ admin_static.url(filename='bootstrap/bootstrap5/css/bootstrap.min.css', v='5.3.8') }}">
+              href="{{ admin_static.url(filename='bootstrap/bootstrap5/css/bootstrap{rtldir}.min.css'.format(rtldir=rtldir), v='5.3.8') }}">
         {%- else -%}
           <link rel="stylesheet" {{ admin_csp_nonce_attribute }}
-              href="{{ admin_static.url(filename='bootstrap/bootstrap5/swatch/{swatch}/bootstrap.min.css'.format(swatch=theme.swatch), v='5.3.8') }}">
+              href="{{ admin_static.url(filename='bootstrap/bootstrap5/swatch/{swatch}/bootstrap{rtldir}.min.css'.format(swatch=theme.swatch, rtldir=rtldir), v='5.3.8') }}">
         {%- endif -%}
 
         <link rel="stylesheet" {{ admin_csp_nonce_attribute }}
@@ -42,7 +43,10 @@
       {% block head_tail %}{% endblock %}
     </head>
 
-    <body>
+    {% set body_dir = 'rtl' if get_locale() == 'ar' else 'ltr' %}
+    {% set body_lang = 'ar' if get_locale() == 'ar' else 'en' %}
+
+    <body dir="{{ body_dir }}" lang="{{ body_lang }}" >
       {% block page_body %}
         <header class="container{% if theme.fluid %}-fluid p-0{% endif %}">
             <nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-2" role="navigation">
@@ -98,6 +102,9 @@
 {% endblock %}
 
 {%- block tail_js %}
+    <script {{ admin_csp_nonce_attribute }}
+        src="{{ admin_static.url(filename='vendor/jquery-3.7.1.min.js', v='3.7.1') }}"></script>
+
     <script {{ admin_csp_nonce_attribute }} src="{{ admin_static.url(filename='bootstrap/bootstrap5/js/bootstrap.bundle.min.js', v='5.3.8') }}"></script>
     <script {{ admin_csp_nonce_attribute }} src="{{ admin_static.url(filename='bootstrap/bootstrap5/js/popper.min.js', v='2.11.8') }}"></script>
 

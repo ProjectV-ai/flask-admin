@@ -33,7 +33,7 @@
               <a class="dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   {{ menu_icon(item) }}{{ item.name }}
               </a>
-              <ul class="dropdown-menu dropdown-menu dropend">
+              <ul class="dropdown-menu dropdown-menu dropend" style="max-width: 200px;">
                   {{ menu(menu_root=children, is_submenu=True) }}
               </ul>
           </li>
@@ -43,7 +43,7 @@
                   <i class="{{ class_name }}"></i>
                   {{ menu_icon(item) }}{{ item.name }}
               </a>
-              <ul class="dropdown-menu dropdown-menu dropend">
+              <ul class="dropdown-menu dropdown-menu dropend" style="max-width: 200px;">
                   {{ menu(menu_root=children, is_submenu=True) }}
               </ul>
           </li>
