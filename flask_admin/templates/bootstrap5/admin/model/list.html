@@ -17,16 +17,16 @@
     <div class="model-toolbar mb-4">
         <ul class="nav nav-pills bg-body-primary flex-wrap align-items-center gap-1 mb-2 p-2">
 
-            <!-- List View Link (Active) -->
-            <li class="nav-item">
-              {% set _content = '<i class="fas fa-list"></i><span class="d-none d-md-inline ms-2">' + _gettext('List') + '</span>' %}
-              {% if count %}
-                {% set _content = _content + '<span class="badge bg-light text-dark ms-2">' + count|string + '</span>' %}
-              {% endif %}
-                {{ lib.subnav_link(content=_content, title=_gettext('List'), link_extra_cls='active disabled') }}
-            </li>
+          <!-- List View Link (Active) -->
+          <li class="nav-item">
+            {% set _content = '<i class="fas fa-list"></i><span class="d-none d-md-inline ms-2">' + _gettext('List') + '</span>' %}
+            {% if count %}
+              {% set _content = _content + '<span class="badge bg-light text-dark ms-2">' + count|string + '</span>' %}
+            {% endif %}
+              {{ lib.subnav_link(content=_content, title=_gettext('List'), link_extra_cls='active disabled') }}
+          </li>
 
-            <!-- Create View Link -->
+          <!-- Create View Link -->
           {%- if admin_view.can_create -%}
             {% set content = '<i class="fas fa-plus"></i><span class="d-none d-md-inline ms-2">' + _gettext('Create') + '</span>' %}
             <li class="nav-item">
