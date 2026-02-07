@@ -11,6 +11,7 @@ from flask import render_template
 from flask import url_for
 from flask.views import MethodView
 from flask.views import View
+from flask_babel import get_locale
 from markupsafe import Markup
 
 from flask_admin import babel
@@ -590,6 +591,10 @@ class Admin:
 
         self.translations_path = translations_path
 
+        @app.context_processor
+        def inject_get_locale():
+            return dict(get_locale=get_locale)
+
         self._views: list[T_VIEW] = []
         self._menu: list[MenuView | MenuCategory | BaseMenu] = []
         self._menu_categories: dict[str, MenuCategory] = dict()
@@ -862,6 +867,10 @@ class Admin:
         self._validate_admin_host_and_subdomain()
 
         self._init_extension()
+
+        @app.context_processor
+        def inject_get_locale():
+            return dict(get_locale=get_locale)
 
         # Register Index view
         if index_view is not None:
