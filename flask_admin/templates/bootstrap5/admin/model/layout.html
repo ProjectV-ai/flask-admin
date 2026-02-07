@@ -7,7 +7,7 @@
             <ul class="dropdown-menu field-filters">
               {% for k in filter_groups %}
                 <li>
-                    <a href="#" class="dropdown-item filter" onclick="return false;">
+                    <a href="#" class="dropdown-item filter" >
                         <i class="fas fa-tag me-2"></i>{{ k | safe }}
                     </a>
                 </li>
@@ -15,29 +15,41 @@
             </ul>
         </div>
     </li>
+
+    <script {{ admin_csp_nonce_attribute }}>
+      document.addEventListener('DOMContentLoaded', function ()
+      {
+          document.querySelectorAll('.filter').forEach(function (el) {
+            el.addEventListener('click', function (e) {
+            e.preventDefault();
+            return false;
+          });
+        });
+      });
+    </script>
 {% endmacro %}
 
 {% macro export_options(btn_class='dropdown-toggle') %}
   {% set export_type_to_icon = { 'xlsx': 'fas fa-file-excel', 'xls': 'fas fa-file-excel' } %}
     <li class="nav-item">
   {% if admin_view.export_types|length > 1 %}
-        <div class="btn-group">
-            <button class="nav-link btn btn-light dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
-              <i class="fas fa-file-download"></i><span class="ms-2 d-none d-md-inline">{{ _gettext('Export') }}</span>
-            </button>
-            <ul class="dropdown-menu">
-              {% for export_type in admin_view.export_types %}
-                {% set export_type_cls = export_type_to_icon.get(export_type, 'fas fa-file-alt') %}
-                <li>
-                    <a class="dropdown-item" href="{{ get_url('.export', export_type=export_type, **request.args) }}">
-                        <i class="{{ export_type_cls }}"></i>
-                        <span class="ms-2 d-none d-md-inline">{{ _gettext('Export') }}</span>
-                        <span class="ms-2">{{ export_type|upper }}</span>
-                    </a>
-                </li>
-              {% endfor %}
-            </ul>
-        </div>
+    <div class="btn-group">
+        <button class="nav-link btn btn-light dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+          <i class="fas fa-file-download"></i><span class="ms-2 d-none d-md-inline">{{ _gettext('Export') }}</span>
+        </button>
+        <ul class="dropdown-menu">
+          {% for export_type in admin_view.export_types %}
+            {% set export_type_cls = export_type_to_icon.get(export_type, 'fas fa-file-alt') %}
+            <li>
+                <a class="dropdown-item" href="{{ get_url('.export', export_type=export_type, **request.args) }}">
+                    <i class="{{ export_type_cls }}"></i>
+                    <span class="ms-2 d-none d-md-inline">{{ _gettext('Export') }}</span>
+                    <span class="ms-2">{{ export_type|upper }}</span>
+                </a>
+            </li>
+          {% endfor %}
+        </ul>
+    </div>
   {% else %}
     {% set export_type_cls = export_type_to_icon.get(admin_view.export_types[0], 'fas fa-file-download') %}
         <a class="nav-link btn btn-light" href="{{ get_url('.export', export_type=admin_view.export_types[0], **request.args) }}" title="{{ _gettext('Export') }}">

@@ -94,8 +94,8 @@
                     <form class="icon d-inline" method="POST" action="{{ get_url('.delete') }}">
                         {{ delete_form.path(value=path) }}
                         {{ delete_form.csrf_token }}
-                        <button class="btn py-0 text-danger"
-                         onclick='return confirm({{ confirmation_msg | tojson }})'>
+                        <button class="btn py-0 text-danger confirm-first"
+                        data-msg="{{ confirmation_msg | tojson }}" >
                             <i class="fas fa-times"></i>
                         </button>
                     </form>
@@ -105,8 +105,8 @@
                     <form class="icon d-inline" method="POST" action="{{ get_url('.delete') }}">
                         {{ delete_form.path(value=path) }}
                         {{ delete_form.csrf_token }}
-                        <button class="btn py-0 text-danger"
-                          onclick='return confirm({{ confirmation_msg | tojson }})'>
+                        <button class="btn py-0 text-danger confirm-first"
+                          data-msg="{{ confirmation_msg | tojson }}" >
                             <i class="fas fa-trash py-0"></i>
                         </button>
                     </form>
@@ -209,4 +209,14 @@
                          actions,
                          actions_confirmation) }}
   <script src="{{ admin_static.url(filename='admin/js/bootstrap5/modal.js', v='1.0.0') }}"></script>
+
+  <script {{ admin_csp_nonce_attribute }}>
+
+    $('.confirm-first').on('click', function (e)
+    {
+        var message = $(this).data('msg');
+        return confirm(message);
+    });
+
+  </script>
 {% endblock %}

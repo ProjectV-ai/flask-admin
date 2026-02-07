@@ -9,4 +9,9 @@
             }
         }
     };
+
+    $('.a-unlink').on('click', function(e) {
+      e.preventDefault();
+    });
+
 })();
