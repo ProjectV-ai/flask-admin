@@ -95,7 +95,7 @@
                         {{ delete_form.path(value=path) }}
                         {{ delete_form.csrf_token }}
                         <button class="btn py-0 text-danger confirm-first"
-                        data-msg="{{ confirmation_msg | tojson }}" >
+                        data-msg="{{ confirmation_msg  }}" >
                             <i class="fas fa-times"></i>
                         </button>
                     </form>
@@ -106,7 +106,7 @@
                         {{ delete_form.path(value=path) }}
                         {{ delete_form.csrf_token }}
                         <button class="btn py-0 text-danger confirm-first"
-                          data-msg="{{ confirmation_msg | tojson }}" >
+                          data-msg="{{ confirmation_msg  }}" >
                             <i class="fas fa-trash py-0"></i>
                         </button>
                     </form>
