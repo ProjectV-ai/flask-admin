@@ -192,6 +192,38 @@
 
 
 {# ---------------------- Forms -------------------------- #}
+
+{%- macro render_field_with_prepend_and_append(field, kwargs={}) -%}
+
+  {%- if prepend -%}
+    <div class="input-group-text">
+        {{ prepend }}
+    </div>
+  {%- endif -%}
+
+  {{ field(**kwargs) | safe }}
+
+  {%- if append -%}
+    <div class="input-group-text">
+        {{ append }}
+    </div>
+  {%- endif -%}
+
+  {%- if direct_error -%}
+    <div class="invalid-feedback">
+        <ul class="list-unstyled mb-0">
+          {%- for e in field.errors if e is string -%}
+            <li>{{ e }}</li>
+          {%- endfor -%}
+        </ul>
+    </div><!-- .invalid-feedback -->
+  {%- elif field.description -%}
+    <div class="form-text">{{ field.description|safe }}</div>
+  {%- endif -%}
+
+
+{%- endmacro -%}
+
 {%- macro render_field(form, field, kwargs={}, caller=None) -%}
   {%- if field.widget.input_type is defined and field.widget.input_type == 'checkbox' -%}
     {%- set _ = kwargs.update({'class': 'form-check-input'}) -%}
@@ -203,7 +235,7 @@
           {{ field(**kwargs)|safe }}
 
           <label class="form-check-label" for="{{ field.id }}">
-              {{- field.label.text -}}
+            {{- field.label.text -}}
             {%- if h.is_required_form_field(field) -%}
               <strong class="text-danger">*</strong>
             {%- endif -%}
@@ -236,44 +268,18 @@
     {%- endif -%}
 
     <div class="mb-3 {{ kwargs.get('column_class', '') }}">
-        <label for="{{ field.id }}" class="form-label">{{ field.label.text }}
-          {%- if h.is_required_form_field(field) -%}
-            <strong class="text-danger">*</strong>
-          {%- endif -%}
-        </label>
+      <label for="{{ field.id }}" class="form-label">{{ field.label.text }}
+        {%- if h.is_required_form_field(field) -%}
+          <strong class="text-danger">*</strong>
+        {%- endif -%}
+      </label>
 
       {%- if prepend or append -%}
         <div class="input-group">
-          {%- if prepend -%}
-            <div class="input-group-text">
-                {{ prepend }}
-            </div>
-          {%- endif -%}
-      {%- endif -%}
-
-      {{ field(**kwargs) | safe }}
-
-      {%- if append -%}
-        <div class="input-group-text">
-            {{ append }}
-        </div>
-      {%- endif -%}
-
-      {%- if direct_error -%}
-        <div class="invalid-feedback">
-            <ul class="list-unstyled mb-0">
-              {%- for e in field.errors if e is string -%}
-                <li>{{ e }}</li>
-              {%- endfor -%}
-            </ul>
-        </div><!-- .invalid-feedback -->
-
-      {%- elif field.description -%}
-        <div class="form-text">{{ field.description|safe }}</div>
-      {%- endif -%}
-
-      {%- if prepend or append -%}
+          {{ render_field_with_prepend_and_append(field, kwargs={}) }}
         </div><!-- .input-group -->
+      {%- else -%}
+        {{ render_field_with_prepend_and_append(field, kwargs={}) }}
       {%- endif -%}
 
       {%- if caller -%}
@@ -429,7 +435,7 @@
       {%- for category, message in messages -%}
         {% set color_class = category_to_color.get(category, 'bg-secondary text-white') %}
         <div class="toast align-items-center {{ color_class }} border-0"
-            role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="15000">
             <div class="d-flex">
                 <div class="toast-body">{{ message }}</div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>

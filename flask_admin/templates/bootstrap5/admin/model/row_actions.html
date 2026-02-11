@@ -63,8 +63,10 @@
           $('#btn-delete-{{ row_id }}').on('click', function (e)
           {
               const msg = $(this).data('msg');
-              faHelpers.safeConfirm(msg);
-              $("#{{ _id }}").submit();
+
+              if(faHelpers.safeConfirm(msg)) {
+                $("#{{ _id }}").submit();
+              }
               return false;
           });
       });

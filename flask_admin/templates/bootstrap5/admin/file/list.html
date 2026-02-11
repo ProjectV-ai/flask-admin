@@ -215,7 +215,7 @@
     $('.confirm-first').on('click', function (e)
     {
         var message = $(this).data('msg');
-        return confirm(message);
+        return faHelpers.safeConfirm(message);
     });
 
   </script>

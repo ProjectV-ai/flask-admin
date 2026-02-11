@@ -2,7 +2,7 @@
 {%- from 'admin/static.html' import url as src_url with context -%}
 {%- import 'admin/lib.html' as lib with context -%}
 {%- import 'admin/model/layout.html' as model_layout with context -%}
-{%- import 'admin/actions.html' as actionlib with context -%}
+{%- import 'admin/actions.html' as actionslib with context -%}
 {#
 #}
 {%- import 'admin/model/row_actions.html' as row_actions with context -%}
@@ -67,7 +67,7 @@
 
           <!-- Bulk Actions Dropdown -->
           {% if actions %}
-              {{ actionlib.dropdown(actions) }}
+              {{ actionslib.dropdown(actions) }}
           {% endif %}
 
           <!-- Search Form -->
@@ -226,7 +226,7 @@
     {% endblock %}
 
     {% block actions %}
-        {{ actionlib.form(actions, get_url('.action_view')) }}
+        {{ actionslib.form(actions, get_url('.action_view')) }}
     {% endblock %}
 
     {% if admin_view.edit_modal or admin_view.create_modal or admin_view.details_modal %}
@@ -239,7 +239,7 @@
     {{ lib.form_js() }}
 
     <!-- actions -->
-    {{ actionlib.script(_gettext('Please select at least one record.'), actions, actions_confirmation) }}
+    {{ actionslib.script(_gettext('Please select at least one record.'), actions, actions_confirmation) }}
 
   {% if filter_groups %}
     <!-- filters -->
