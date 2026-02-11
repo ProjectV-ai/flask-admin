@@ -276,10 +276,10 @@
 
       {%- if prepend or append -%}
         <div class="input-group">
-          {{ render_field_with_prepend_and_append(field, kwargs={}) }}
+          {{ render_field_with_prepend_and_append(field, kwargs) }}
         </div><!-- .input-group -->
       {%- else -%}
-        {{ render_field_with_prepend_and_append(field, kwargs={}) }}
+        {{ render_field_with_prepend_and_append(field, kwargs) }}
       {%- endif -%}
 
       {%- if caller -%}
