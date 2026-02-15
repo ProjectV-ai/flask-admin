@@ -20,7 +20,7 @@
 
         {%- if admin_view.can_create -%}
           {%- set _content = '<i class="fas fa-plus"></i><span class="ms-2 d-none d-md-inline">' + _gettext('Create') + '</span>' -%}
-          {%- set _url = get_url('.create_view', url=return_url, modal=Flase) -%}
+          {%- set _url = get_url('.create_view', url=return_url, modal=False) -%}
           <!-- Create View Link -->
           <li class="nav-item">
               {{ lib.subnav_link(content=_content, url=_url, title=_gettext('Create New Record')) }}

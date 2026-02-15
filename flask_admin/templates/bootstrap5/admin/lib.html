@@ -195,6 +195,10 @@
 
 {%- macro render_field_with_prepend_and_append(field, kwargs={}) -%}
 
+  {% set prepend = kwargs.pop('prepend', None) %}
+  {% set append = kwargs.pop('append', None) %}
+  {% set direct_error = h.is_field_error(field.errors) %}
+
   {%- if prepend -%}
     <div class="input-group-text">
         {{ prepend }}
@@ -225,6 +229,11 @@
 {%- endmacro -%}
 
 {%- macro render_field(form, field, kwargs={}, caller=None) -%}
+
+  {% set prepend = kwargs.pop('prepend', None) %}
+  {% set append = kwargs.pop('append', None) %}
+  {% set direct_error = h.is_field_error(field.errors) %}
+
   {%- if field.widget.input_type is defined and field.widget.input_type == 'checkbox' -%}
     {%- set _ = kwargs.update({'class': 'form-check-input'}) -%}
     {%- if direct_error -%}{%- set _ = kwargs.update({'class': kwargs['class'] ~ ' is-invalid'}) -%}{%- endif -%}
