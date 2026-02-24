@@ -118,9 +118,7 @@
                             <th scope="col" class="column-header col-{{c}} position-relative">
                                 <div class="d-flex align-items-top">
                                   {%- if admin_view.is_sortable(c) -%}
-                                    <a class="text-decoration-none" href="{{ sort_url(column, sort_column == column) }}"
-                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="{{ _gettext('Sort by %(name)s', name=name)|lower }}">{{ name }}</a>
+                                    <a class="text-decoration-none" href="{{ sort_url(column, sort_column == column) }}">{{ name }}</a>
                                   {%- else -%}
                                     <span class="fw-semibold">{{ name }}</span>
                                   {%- endif -%}
@@ -134,13 +132,17 @@
                                   {%- endif -%}
 
                                     <div class="ms-auto">
-                                      {%- if admin_view.is_sortable(c) and sort_column == column -%}
-                                        <span class="sort-indicator">
-                                            <i class="fas fa-sort-{% if sort_desc %}up{% else %}down{% endif %} text-primary"></i>
-                                        </span>
-                                      {%- else -%}
-                                        <i class="fas fa-sort text-muted opacity-50"></i>
-                                      {%- endif -%}
+                                      <a class="text-decoration-none" href="{{ sort_url(column, sort_column == column) }}"
+                                          data-bs-toggle="tooltip" data-bs-placement="top"
+                                          title="{{ _gettext('Sort by %(name)s', name=name) | lower }}" >
+                                        {%- if admin_view.is_sortable(c) and sort_column == column -%}
+                                          <span class="sort-indicator">
+                                              <i class="fas fa-sort-{% if sort_desc %}up{% else %}down{% endif %} text-primary"></i>
+                                          </span>
+                                        {%- else -%}
+                                          <i class="fas fa-sort text-muted opacity-50"></i>
+                                        {%- endif -%}
+                                      </a>
                                     </div>
                                 </div><!-- .d-flex align-items-center -->
                             </th>

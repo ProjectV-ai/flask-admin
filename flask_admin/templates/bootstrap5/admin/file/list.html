@@ -39,20 +39,35 @@
 
                 {% for column in admin_view.column_list %}
                 <th>
-                    {% if admin_view.is_column_sortable(column) %}
-                    {% if sort_column == column %}
-                        <a class="text-decoration-none" href="{{ sort_url(column, dir_path, True) }}" title="{{ _gettext('Sort by %(name)s', name=column) }}">
+                  {% if admin_view.is_column_sortable(column) %}
+                    <div class="d-flex align-items-top">
+                      {% if sort_column == column %}
+                        <a class="text-decoration-none" href="{{ sort_url(column, dir_path, True) }}" >
                             {{ admin_view.column_label(column) }}
-                            <i class="fas fa-chevron-{% if sort_desc %}up{% else %}down{% endif %}"></i>
                         </a>
-                    {% else %}
-                        <a class="text-decoration-none " href="{{ sort_url(column, dir_path) }}" title="{{ _gettext('Sort by %(name)s', name=column) }}">
+                        <div class="ms-auto">
+                          <a class="text-decoration-none" href="{{ sort_url(column, dir_path, True) }}"
+                            data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="{{ _gettext('Sort by %(name)s', name=column) }}">
+                            <i class="fas fa-sort-{% if sort_desc %}up{% else %}down{% endif %} text-primary"></i>
+                          </a>
+                        </div>
+                      {% else %}
+                        <a class="text-decoration-none " href="{{ sort_url(column, dir_path) }}" >
                           {{ admin_view.column_label(column) }}
                         </a>
-                    {% endif %}
-                    {% else %}
-                    {{ _gettext(admin_view.column_label(column)) }}
-                    {% endif %}
+                        <div class="ms-auto">
+                          <a class="text-decoration-none " href="{{ sort_url(column, dir_path) }}"
+                          data-bs-toggle="tooltip" data-bs-placement="top"
+                          title="{{ _gettext('Sort by %(name)s', name=column) }}">
+                            <i class="fas fa-sort text-muted opacity-50"></i>
+                          </a>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% else %}
+                      {{ _gettext(admin_view.column_label(column)) }}
+                  {% endif %}
                 </th>
                 {% endfor %}
 
